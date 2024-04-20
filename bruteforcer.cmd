@@ -370,7 +370,7 @@ goto :mainmenu
     :: wifi[] is the array for possible wifis
     set wifi_index=-1
     set cancel_index=0
-    for /f "tokens=1-4" %%a in ('netsh wlan show networks mode^=bssid interface^="!interface_id!" ') do (
+    for /f "tokens=1-6" %%a in ('netsh wlan show networks mode^=bssid interface^="!interface_id!" ') do (
 
         if "%%a" equ "SSID" (
             set /a wifi_index=!wifi_index!+1
@@ -455,20 +455,20 @@ goto :eof
         goto :eof
     )
 
-    cls
-    echo.
-    call :color_echo . yellow "WARNING"
-    echo.
-    echo.
-    echo If you connected to a network with the same name as this: "!wifi_target!",
-    echo its profile will be deleted.
-    echo.
-    echo This app might not find the correct password if the signal strength
-    echo is too low. Remember, this is an online attack. Expect slow attempts.
-    echo.
-    pause
-    netsh wlan delete profile !wifi_target! interface="!interface_id!">nul
-    cls
+    @REM cls
+    @REM echo.
+    @REM call :color_echo . yellow "WARNING"
+    @REM echo.
+    @REM echo.
+    @REM echo If you connected to a network with the same name as this: "!wifi_target!",
+    @REM echo its profile will be deleted.
+    @REM echo.
+    @REM echo This app might not find the correct password if the signal strength
+    @REM echo is too low. Remember, this is an online attack. Expect slow attempts.
+    @REM echo.
+    @REM pause
+    @REM netsh wlan delete profile !wifi_target! interface="!interface_id!">nul
+    @REM cls
 
     :: Prepare ssid import
     del /Q /F importwifi_prepared.xml 2>nul
@@ -503,8 +503,6 @@ goto :eof
         echo.
 		netsh wlan connect name=!wifi_target! interface="!interface_id!" >nul
 
-
-
         for /l %%a in ( 1, 1, 20 ) do (
             call :interface_find_state
 
@@ -518,7 +516,6 @@ goto :eof
             
 
         )
-
         del /Q /F importwifi_attempt.xml 2>nul
     )
 
