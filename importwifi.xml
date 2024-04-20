@@ -3,7 +3,7 @@
 	<name>changethistitle</name>
 	<SSIDConfig>
 		<SSID>
-			<name>changethistitle</name>
+			<name>changethisbssid</name>
 		</SSID>
 	</SSIDConfig>
 	<connectionType>ESS</connectionType>
